@@ -41,7 +41,7 @@ async def get_students(user=Depends(get_user), db=Depends(get_db)):
         print(user)
         if not user:
             raise HTTPException(status_code=401, detail="Unauthorized")
-        if user["user_info"]["is_parent"]:
+        if not user["user_info"]["is_student"]:
             raise HTTPException(status_code=403, detail="Forbidden")
         repo = StudentRepo(db)
         service = StudentService(repo)
@@ -59,7 +59,7 @@ async def edit_student(
         print("================================")
         if not user:
             raise HTTPException(status_code=401, detail="Unauthorized")
-        if user["user_info"]["is_parent"]:
+        if not user["user_info"]["is_student"]:
             raise HTTPException(status_code=403, detail="Forbidden")
         repo = StudentRepo(db)
         result = repo.updata_student(data=data.model_dump(), id=user["user_info"]["id"])
@@ -78,7 +78,7 @@ async def delete_student(user=Depends(get_user), db=Depends(get_db)):
         print(user)
         if not user:
             raise HTTPException(status_code=401, detail="Unauthorized")
-        if user["user_info"]["is_parent"]:
+        if not user["user_info"]["is_student"]:
             raise HTTPException(status_code=403, detail="Forbidden")
         print("==============")
         repo = StudentRepo(db)

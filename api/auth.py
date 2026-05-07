@@ -173,7 +173,8 @@ async def get_token(user: LoginUser, db: Session = Depends(get_db)):
                         "gender": user_current.gender,
                         "quran": user_current.quran_progress,
                         "package": user_current.monthly_package,
-                        "is_student": False,
+                        "is_student": True,
+                        "is_parents": False,
                     }
                 }
             )
@@ -185,6 +186,7 @@ async def get_token(user: LoginUser, db: Session = Depends(get_db)):
                         "name": user_current.name,
                         "email": user_current.email,
                         "is_parent": True,
+                        "is_student": False,
                     }
                 }
             )
@@ -196,6 +198,7 @@ async def get_token(user: LoginUser, db: Session = Depends(get_db)):
                         "name": user_current.name,
                         "email": user_current.email,
                         "is_parent": False,
+                        "is_student": False,
                         "role": user_current.role,
                         "gender": user_current.gender,
                     }
@@ -256,7 +259,8 @@ async def login(
                         "gender": user_current.gender,
                         "quran": user_current.quran_progress,
                         "package": user_current.monthly_package,
-                        "is_student": False,
+                        "is_student": True,
+                        "is_parents": False,
                     }
                 }
             )
@@ -268,6 +272,7 @@ async def login(
                         "name": user_current.name,
                         "email": user_current.email,
                         "is_parent": True,
+                        "is_student": False,
                     }
                 }
             )
@@ -278,7 +283,8 @@ async def login(
                         "id": user_current.id,
                         "name": user_current.name,
                         "email": user_current.email,
-                        "is_parent": False,
+                        "is_student": False,
+                        "is_parents": False,
                         "role": user_current.role,
                         "gender": user_current.gender,
                     }
