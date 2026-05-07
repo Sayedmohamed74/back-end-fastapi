@@ -20,7 +20,6 @@ class ReportsRepo:
 
     def reportes_for_parents(self, id: int):
         students = self.db.query(Students).filter(Students.parent_id == id).all()
-        print(len(students[0].reports))
         return [
             ChildWithReports(
                 name=s.name,

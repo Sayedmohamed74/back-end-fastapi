@@ -38,7 +38,6 @@ class RequestStudent(BaseModel):
 async def get_students(user=Depends(get_user), db=Depends(get_db)):
 
     try:
-        print(user)
         if not user:
             raise HTTPException(status_code=401, detail="Unauthorized")
         if not user["user_info"]["is_student"]:
@@ -55,8 +54,6 @@ async def edit_student(
     data: RequestStudent, user=Depends(get_user), db=Depends(get_db)
 ):
     try:
-        print(user)
-        print("================================")
         if not user:
             raise HTTPException(status_code=401, detail="Unauthorized")
         if not user["user_info"]["is_student"]:
@@ -71,20 +68,18 @@ async def edit_student(
 
 @router.delete("/delete")
 async def delete_student(user=Depends(get_user), db=Depends(get_db)):
-    print("==============+++++++")
+
     repo = StudentRepo(db)
     service = StudentService(repo)
     try:
-        print(user)
         if not user:
             raise HTTPException(status_code=401, detail="Unauthorized")
         if not user["user_info"]["is_student"]:
             raise HTTPException(status_code=403, detail="Forbidden")
-        print("==============")
+
         repo = StudentRepo(db)
-        print("==============")
+
         service = StudentService(repo)
-        print("==============")
 
         return service.remove_student(user["user_info"]["id"])
     except Exception as e:

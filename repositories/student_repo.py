@@ -32,7 +32,7 @@ class StudentRepo:
         return self.db.query(Students).filter(Students.id == id).first()
 
     def delete_student(self, student):
-        print(student)
+
         self.db.delete(student)
         self.db.commit()
 

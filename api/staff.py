@@ -40,7 +40,7 @@ class AddReport(BaseModel):
 @router.get("/all")
 async def all_staff(user=Depends(get_user), db=Depends(get_db)):
     repo = StaffRepo(db)
-    print(user)
+
     return repo.get_staff_all(
         role=user["user_info"]["role"], id=user["user_info"]["id"]
     )
@@ -69,6 +69,7 @@ def set_schedules(item: AddSchedules, user=Depends(get_user), db=Depends(get_db)
     repo = SchedulesRepo(db)
     # repo.set_schedules(user['user_info']['role'] ,user['user_info']['id'],item.model_dump())
     repo.set_schedules("teacher", 3, item.model_dump())
+    return {"created": True}
 
 
 @router.post("/add/repot")
@@ -77,3 +78,4 @@ def set_schedules(item: AddReport, user=Depends(get_user), db=Depends(get_db)):
     repo = ReportsRepo(db)
     # repo.set_schedules(user['user_info']['role'] ,user['user_info']['id'],item.model_dump())
     repo.set_repot("teacher", item.model_dump())
+    return {"created": True}

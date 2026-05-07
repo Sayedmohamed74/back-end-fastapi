@@ -80,7 +80,7 @@ def convert_token_info(token):
 
 
 async def get_user(token: str = Depends(oauth2_scheme)):
-    print(token)
+
     if not token:
         raise HTTPException(
             status_code=401,

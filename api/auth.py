@@ -20,12 +20,17 @@ from core.auth import (
 )
 
 
+class Gender(str, Enum):
+    male = "Male"
+    female = "Female"
+
+
 class RegisterStudent(BaseModel):
     userName: str
     password: str
     email: EmailStr
     birthDate: datetime
-    gender: str
+    gender: Gender
     created_at: str = datetime.now(timezone.utc).isoformat()
 
 
@@ -43,7 +48,7 @@ class ResponseRegister(BaseModel):
 class DataOfToken(BaseModel):
     userName: str
     email: EmailStr
-    gender: str
+    gender: Gender
     created_at: str
 
 
@@ -51,7 +56,7 @@ class ReturnUser(BaseModel):
     userName: str
     email: EmailStr
     birthDate: str
-    gender: str
+    gender: Gender
     token: str
     id: int
 
@@ -87,7 +92,7 @@ async def register(data_user: Annotated[RegisterStudent, Body()], db=Depends(get
                 "password": data_user.password,
                 "birth_date": str(data_user.birthDate),
                 "gender": data_user.gender,
-                "created_at": data_user.created_at,
+                "created_at": str(data_user.created_at),
             }
         )
     except:
@@ -102,8 +107,6 @@ async def register(data_user: Annotated[RegisterStudent, Body()], db=Depends(get
 async def register(data_user: Annotated[RegisterParents, Body()], db=Depends(get_db)):
     repo = ParentsRepo(db)
     parent = repo.get_parents_by_email(data_user.email.strip())
-    print("=" * 50)
-    print(parent)
 
     if parent:
         raise HTTPException(status_code=400, detail="This email is found")
@@ -114,11 +117,10 @@ async def register(data_user: Annotated[RegisterParents, Body()], db=Depends(get
         )
 
     try:
-        print("=" * 50)
         password = convert_pass_hash(data_user.password)
-        print("=" * 50)
+
         data_user.password = password
-        print("=" * 50)
+
         repo.create_parents(
             parents_data={
                 "name": data_user.userName,
@@ -127,7 +129,7 @@ async def register(data_user: Annotated[RegisterParents, Body()], db=Depends(get
                 "phone": data_user.phoneNumber,
             }
         )
-        print("=" * 50)
+
     except:
         raise HTTPException(
             status_code=500, detail="An error occurred while creating the parent"
@@ -205,8 +207,6 @@ async def get_token(user: LoginUser, db: Session = Depends(get_db)):
                 }
             )
 
-        print(token_payload)
-
         return token_payload
 
     except Exception as e:
@@ -227,7 +227,7 @@ async def login(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    print(user.username)
+
     repo_student = StudentRepo(db)
     repo_parents = ParentsRepo(db)
     repo_staff = StaffRepo(db)
@@ -237,12 +237,12 @@ async def login(
         or repo_staff.get_staff_by_eamil(user.username.strip())
     )
 
-    print(user_current)
     try:
         # data = convert_token_info(token)
         # if not data:
         #     raise credentials_exception
-
+        print(user.username)
+        print(user_current.email)
         if not user_current:
             raise credentials_exception
         if not compare_pass_hash(user.password, user_current.password):
@@ -290,8 +290,6 @@ async def login(
                     }
                 }
             )
-
-        print(token_payload)
 
         return {"access_token": token_payload["token"], "token_type": "bearer"}
 

@@ -19,9 +19,8 @@ class StudentService:
         return self.repo.get_student_by_id(id)
 
     def remove_student(self, id: int):
-        print(id)
+
         student = self.repo.get_student_by_id(id)
-        print(student.__dict__)
 
         if not student:
             raise Exception("Student not found")
